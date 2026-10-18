@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+  <title>ترخيص منشأة صناعية</title>
+  <link rel="preload" as="style" href="/css/build/assets/app-Dq9IadKQ.css">
+  <link rel="stylesheet" href="/css/build/assets/app-Dq9IadKQ.css">
+  <style>
+    .font-diam {
+      font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+    }
+    #viewer { visibility: hidden; }
+    #load-error { display:none; position:fixed; inset:0; z-index:99999; background:#fff; color:#111; align-items:center; justify-content:center; text-align:center; font-family:Arial,Helvetica,sans-serif; }
+    #load-error .error-code { font-size:44px; font-weight:700; line-height:1.1; margin:0 0 12px; }
+    #load-error .error-text { font-size:18px; margin:0; color:#333; }
+  </style>
+</head>
+<body class="font-diam px-6 py-20 text-slate-800">
+  <div id="load-error"></div>
+
+  <div id="viewer" class="max-w-5xl mx-auto">
+    <div class="flex items-center justify-between gap-8">
+      <div><img src="/images/mim-logo.png" class="h-16" alt="Ministry of Industry and Mineral Resources"></div>
+      <div id="license-type" class="text-xl font-bold">—</div>
+      <div><img src="/images/vision-2030-top.png" class="h-16" alt="Saudi Vision 2030"></div>
+    </div>
+
+    <div class="mt-6 p-6 rounded-md flex flex-col bg-gray-100 justify-between items-center mb-4">
+      <div class="flex w-full items-center gap-6">
+        <span id="license-number" class="text-lg font-medium">—</span>
+        <span class="bg-red-200 bg-green-200 bg-orange-200 hidden hide d-none"></span>
+        <div id="license-status" class="px-4 py-1 rounded-md">—</div>
+      </div>
+      <div class="flex gap-6 mt-4 w-full">
+        <div class="flex gap-4 items-center">
+          <div class="font-medium">تاريخ الإصدار</div>
+          <div id="license-issue-date">—</div>
+        </div>
+        <div class="flex gap-4 items-center">
+          <div class="font-medium">تاريخ الانتهاء</div>
+          <div id="license-expiry-date">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full mt-6 space-y-12 divide-y">
+      <div class="w-full">
+        <h3 class="text-xl text-teal-500 font-bold mb-2">بيانات المنشأة الصناعية</h3>
+        <div class="mt-6 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+          <div class="flex flex-col gap-4 w-full">
+            <div class="flex flex-col space-y-2">
+              <p class="text-lg">رمز المنشأة الصناعية</p>
+              <p id="facility-code" class="text-slate-500 font-medium">—</p>
+            </div>
+            <div class="flex flex-col space-y-2">
+              <p class="text-lg">اسم المنشأة الصناعية</p>
+              <p id="facility-name" class="text-slate-500 font-medium">—</p>
+            </div>
+            <div class="flex flex-col space-y-2">
+              <p class="text-lg">عنوان المنشأة الصناعية</p>
+              <p id="facility-address" class="text-slate-500 font-medium">—</p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-4 w-full">
+            <div class="flex flex-col space-y-2">
+              <p class="text-lg">حالة المنشأة الصناعية</p>
+              <div id="facility-status-badge" class="bg-green-200 px-4 py-1 rounded-md" style="width: max-content;">
+                <p id="facility-status" class="text-slate-500 font-medium">—</p>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-4 w-full">
+            <div class="flex flex-col space-y-2">
+              <p class="text-lg">الرقم الموحد</p>
+              <p id="unified-number" class="text-slate-500 font-medium">—</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full pt-6">
+        <h3 class="text-xl text-teal-500 font-bold mb-2">بيانات السجل التجاري</h3>
+        <div class="mt-6 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+          <div class="flex flex-col gap-4 w-full">
+            <div class="flex flex-col space-y-2">
+              <p class="text-lg">اسم المنشأة في السجل التجاري</p>
+              <p id="cr-name" class="text-slate-500 font-medium">—</p>
+            </div>
+            <div class="flex flex-col space-y-2">
+              <p class="text-lg">عنوان السجل التجاري</p>
+              <p id="cr-address" class="text-slate-500 font-medium">—</p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-4 w-full"></div>
+          <div class="flex flex-col gap-4 w-full"></div>
+        </div>
+
+        <div class="mt-4 w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+          <div class="flex flex-col gap-4 w-full">
+            <div class="flex flex-col space-y-2">
+              <p class="text-lg">رقم السجل التجاري</p>
+              <p id="cr-number" class="text-slate-500 font-medium">—</p>
+            </div>
+            <div class="flex flex-col space-y-2">
+              <p class="text-lg">تاريخ إصدار السجل التجاري</p>
+              <p id="cr-issue-date" class="text-slate-500 font-medium">—</p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-4 w-full">
+            <div class="flex flex-col space-y-2">
+              <p class="text-lg">نوع السجل التجاري</p>
+              <p id="cr-type" class="text-slate-500 font-medium">—</p>
+            </div>
+            <div class="flex flex-col space-y-2">
+              <p class="text-lg">تاريخ إنتهاء السجل التجاري</p>
+              <p id="cr-expiry-date" class="text-slate-500 font-medium"></p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-4 w-full">
+            <div class="flex flex-col space-y-2">
+              <p class="text-lg">رأس المال</p>
+              <p id="cr-capital" class="text-slate-500 font-medium">—</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full pt-6">
+        <h3 class="text-xl text-teal-500 font-bold mb-2">قائمة الأنشطة الإقتصادية المرخصة</h3>
+        <table class="mt-6 rounded-md shadow min-w-full divide-y divide-gray-300">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="py-3.5 pl-4 pr-3 text-center text-sm sm:pl-3">رمز النشاط</th>
+              <th scope="col" class="px-3 py-3.5 text-center text-sm">مسمى النشاط</th>
+            </tr>
+          </thead>
+          <tbody id="activities-body" class="bg-white"></tbody>
+        </table>
+      </div>
+
+      <div class="w-full pt-6">
+        <h3 class="text-xl text-teal-500 font-bold mb-2">قائمة المنتجات</h3>
+        <table class="mt-6 rounded-md shadow min-w-full divide-y divide-gray-300">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="py-3.5 pl-4 pr-3 text-center text-sm sm:pl-3">جميع بنود الـ HS</th>
+              <th scope="col" class="py-3.5 pl-4 pr-3 text-center text-sm sm:pl-3">البند الجمركي</th>
+              <th scope="col" class="px-3 py-3.5 text-center text-sm">اسم المنتج</th>
+              <th scope="col" class="px-3 py-3.5 text-center text-sm">النشاط الصناعي</th>
+              <th scope="col" class="px-3 py-3.5 text-center text-sm">الطاقة الإنتاجيةالتصميمية القصوى سنوياً</th>
+              <th scope="col" class="px-3 py-3.5 text-center text-sm">وحدة القياس</th>
+            </tr>
+          </thead>
+          <tbody id="products-body" class="bg-white"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-8 pt-8 flex w-full border-t border-slate-400 items-center justify-center px-4">
+      <img src="/images/senaei.jpg" class="w-36" alt="Senaei">
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function () {});
+      }
+
+      function text(id, value) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = value == null ? '' : String(value);
+      }
+
+      function getRouteId() {
+        var match = location.pathname.match(/\/license\/view\/([^/?#]+)/i);
+        if (match && match[1]) return decodeURIComponent(match[1]);
+        var params = new URLSearchParams(location.search);
+        return params.get('id') || params.get('routeId') || '';
+      }
+
+      function applyStatus(el, value) {
+        if (!el) return;
+        el.className = 'px-4 py-1 rounded-md';
+        var normalized = String(value || '').trim();
+        if (/نشط|active/i.test(normalized)) {
+          el.classList.add('bg-green-200', 'text-green-900');
+        } else if (/منته|expired|ملغ|cancel/i.test(normalized)) {
+          el.classList.add('bg-red-200', 'text-red-900');
+        } else {
+          el.classList.add('bg-orange-200', 'text-orange-900');
+        }
+        el.textContent = normalized;
+      }
+
+      function td(value, className) {
+        var cell = document.createElement('td');
+        cell.className = className;
+        cell.textContent = value == null ? '' : String(value);
+        return cell;
+      }
+
+      function renderActivities(items) {
+        var body = document.getElementById('activities-body');
+        body.textContent = '';
+        (Array.isArray(items) ? items : []).forEach(function (item) {
+          var row = document.createElement('tr');
+          row.className = 'even:bg-gray-50';
+          row.appendChild(td(item.activityCode, 'whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3 text-center'));
+          row.appendChild(td(item.activityName, 'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center'));
+          body.appendChild(row);
+        });
+      }
+
+      function renderProducts(items) {
+        var body = document.getElementById('products-body');
+        body.textContent = '';
+        (Array.isArray(items) ? items : []).forEach(function (item) {
+          var row = document.createElement('tr');
+          row.className = 'even:bg-gray-50';
+          row.appendChild(td(item.allHsCodes, 'whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3 text-center'));
+          row.appendChild(td(item.customsTariffCode, 'whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-3 text-center'));
+          row.appendChild(td(item.productName, 'whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-center'));
+          row.appendChild(td(item.industrialActivity, 'whitespace nowrap px-3 py-4 text-sm text-gray-500 text-center'));
+          row.appendChild(td(item.maximumAnnualDesignProductionCapacity, 'whitespace nowrap px-3 py-4 text-sm text-gray-500 text-center'));
+          row.appendChild(td(item.unitOfMeasure, 'whitespace nowrap px-3 py-4 text-sm text-gray-500 text-center'));
+          body.appendChild(row);
+        });
+      }
+
+      function render(data) {
+        var facility = data.industrialFacility || {};
+        var cr = data.commercialRegistration || {};
+
+        text('license-type', data.licenseType || 'ترخيص منشأة صناعية');
+        text('license-number', 'ترخيص صناعي رقم ' + (data.licenseNumber || ''));
+        applyStatus(document.getElementById('license-status'), data.licenseStatus || '');
+        text('license-issue-date', data.issueDate || '');
+        text('license-expiry-date', data.expiryDate || '');
+
+        text('facility-code', facility.facilityCode || '');
+        text('facility-name', facility.facilityName || '');
+        text('facility-address', facility.facilityAddress || '');
+        text('facility-status', facility.facilityStatus || '');
+        text('unified-number', facility.unifiedNumber || '');
+
+        text('cr-name', cr.establishmentName || '');
+        text('cr-address', cr.address || '');
+        text('cr-number', cr.commercialRegistrationNumber || '');
+        text('cr-issue-date', cr.issueDate || '');
+        text('cr-type', cr.type || '');
+        text('cr-expiry-date', cr.expiryDate || '');
+        var capital = cr.capital || '';
+        if (capital && cr.currency) capital += '  ' + cr.currency;
+        text('cr-capital', capital);
+
+        renderActivities(data.licensedEconomicActivities);
+        renderProducts(data.products);
+
+        document.title = (data.licenseType || 'ترخيص منشأة صناعية') + ' | ' + (facility.facilityName || '') + ' | ' + (data.licenseNumber || '');
+        document.getElementById('viewer').style.visibility = 'visible';
+      }
+
+      function showError() {
+        var viewer = document.getElementById('viewer');
+        if (viewer) viewer.style.display = 'none';
+        var error = document.getElementById('load-error');
+        error.innerHTML = '<div><div class="error-code">Error 404</div><div class="error-text">Page not found.</div></div>';
+        error.style.display = 'flex';
+        document.documentElement.lang = 'en';
+        document.documentElement.dir = 'ltr';
+        document.title = 'Error 404';
+      }
+
+      var routeId = getRouteId();
+      if (!routeId) {
+        showError();
+        return;
+      }
+
+      fetch('/data/' + encodeURIComponent(routeId) + '.json', { cache: 'no-store' })
+        .then(function (response) {
+          if (!response.ok) throw new Error('HTTP ' + response.status);
+          return response.json();
+        })
+        .then(render)
+        .catch(function () {
+          showError();
+        });
+    })();
+  </script>
+</body>
+</html>

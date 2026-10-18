@@ -1,0 +1,12 @@
+RewriteEngine On
+
+# Root domain: show the custom English 404 page
+RewriteRule ^$ /404.html [L]
+
+# Viewer routes: always load the fixed viewer; JSON decides whether the ID exists
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^license/view/[^/]+/?$ /index.html [L]
+
+# Any other missing path
+ErrorDocument 404 /404.html

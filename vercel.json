@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/license/view/:id",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/license/view/:id/",
+      "destination": "/index.html"
+    }
+  ]
+}
