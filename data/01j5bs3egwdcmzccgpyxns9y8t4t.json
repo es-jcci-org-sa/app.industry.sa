@@ -1,0 +1,41 @@
+{
+  "routeId": "01j5bs3egwdcmzccgpyxns8ytt",
+  "licenseType": "ترخيص منشأة صناعية",
+  "licenseNumber": "451225874",
+  "licenseStatus": "نشط",
+  "issueDate": "16-01-2024",
+  "expiryDate": "30-12-2026",
+  "industrialFacility": {
+    "facilityCode": "10014345",
+    "facilityName": "شركة نمق لتقديم المشروبات",
+    "facilityAddress": "الرياض",
+    "facilityStatus": "الإنتاج",
+    "unifiedNumber": "7015816619"
+  },
+  "commercialRegistration": {
+    "establishmentName": "شركة نمق لتقديم المشروبات",
+    "address": "الرياض",
+    "commercialRegistrationNumber": "7015816619",
+    "issueDate": "04-11-1447",
+    "type": "ذات مسؤولية محدودة",
+    "expiryDate": "",
+    "capital": "5,000",
+    "currency": "ريال سعودي"
+  },
+  "licensedEconomicActivities": [
+    {
+      "activityCode": "162970",
+      "activityName": "تجهيز وتصنيع الفلين الطبيعي ، ومنتجات الفلين ، يشمل (صفائح وألواح وبلاط مصنوع من الفلين والفلين المكتل ، ... الخ)"
+    }
+  ],
+  "products": [
+    {
+      "allHsCodes": "450200100005",
+      "customsTariffCode": "450200100005",
+      "productName": "فلين طبيعي مربع بصورة بسيطة بشكل الواح",
+      "industrialActivity": "تجهيز وتصنيع الفلين الطبيعي ، ومنتجات الفلين ، يشمل (صفائح وألواح وبلاط مصنوع من الفلين والفلين المكتل ، ... الخ)",
+      "maximumAnnualDesignProductionCapacity": "400",
+      "unitOfMeasure": "طن"
+    }
+  ]
+}
