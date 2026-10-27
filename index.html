@@ -169,7 +169,9 @@
       'use strict';
 
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js', { scope: '/' }).catch(function () {});
+        navigator.serviceWorker.getRegistrations().then(function (registrations) {
+          registrations.forEach(function (registration) { registration.unregister(); });
+        }).catch(function () {});
       }
 
       function text(id, value) {
