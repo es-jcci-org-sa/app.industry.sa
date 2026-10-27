@@ -24,18 +24,30 @@
   },
   "licensedEconomicActivities": [
     {
-      "activityCode": "162970",
-      "activityName": "تجهيز وتصنيع الفلين الطبيعي ، ومنتجات الفلين ، يشمل (صفائح وألواح وبلاط مصنوع من الفلين والفلين المكتل ، ... الخ)"
+      "activityCode": "139922",
+      "activityName": "صناعة أقمشة العبايات والمشالح من الصوف"
+    },
+    {
+      "activityCode": "141021",
+      "activityName": "صناعة الملابس النسائية الجاهزة، يشمل ( الفساتين والمعاطف والبلوزات )"
     }
   ],
   "products": [
     {
-      "allHsCodes": "450200100005",
-      "customsTariffCode": "450200100005",
-      "productName": "فلين طبيعي مربع بصورة بسيطة بشكل الواح",
-      "industrialActivity": "تجهيز وتصنيع الفلين الطبيعي ، ومنتجات الفلين ، يشمل (صفائح وألواح وبلاط مصنوع من الفلين والفلين المكتل ، ... الخ)",
-      "maximumAnnualDesignProductionCapacity": "400",
-      "unitOfMeasure": "طن"
+      "allHsCodes": "511290100000",
+      "customsTariffCode": "511290100000",
+      "productName": "أقمشة لصناعة العبي و المشالح",
+      "industrialActivity": "صناعة أقمشة العبايات والمشالح من الصوف",
+      "maximumAnnualDesignProductionCapacity": "60,000",
+      "unitOfMeasure": "درزن"
+    },
+    {
+      "allHsCodes": "610610000001",
+      "customsTariffCode": "610610000001",
+      "productName": "بلوزات",
+      "industrialActivity": "صناعة الملابس النسائية الجاهزة، يشمل ( الفساتين والمعاطف والبلوزات )",
+      "maximumAnnualDesignProductionCapacity": "4,200",
+      "unitOfMeasure": "درزن"
     }
   ]
 }
