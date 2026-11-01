@@ -1,0 +1,280 @@
+{
+  "version": 2,
+  "language": "ar",
+  "direction": "rtl",
+  "stylesheets": [
+    "css/build/assets/app-Dq9IadKQ.css",
+    "css/viewer.css"
+  ],
+  "favicon": "assets/favicon.ico",
+  "documentTitle": {
+    "paths": [
+      "licenseType",
+      "industrialFacility.facilityName",
+      "licenseNumber"
+    ],
+    "separator": " | "
+  },
+  "header": {
+    "startImage": {
+      "src": "images/mim-logo.png",
+      "alt": "Ministry of Industry and Mineral Resources"
+    },
+    "title": {
+      "path": "licenseType",
+      "id": "license-type"
+    },
+    "endImage": {
+      "src": "images/vision-2030-top.png",
+      "alt": "Saudi Vision 2030"
+    }
+  },
+  "summary": {
+    "identifier": {
+      "path": "licenseNumber",
+      "prefix": "ترخيص صناعي رقم ",
+      "id": "license-number"
+    },
+    "status": {
+      "path": "licenseStatus",
+      "id": "license-status",
+      "variants": [
+        {
+          "values": [
+            "نشط",
+            "نشطة",
+            "ساري",
+            "سارية",
+            "active"
+          ],
+          "tone": "success"
+        },
+        {
+          "values": [
+            "منتهي",
+            "منتهية",
+            "ملغي",
+            "ملغى",
+            "ملغاة",
+            "موقوف",
+            "غير نشط",
+            "inactive",
+            "expired",
+            "cancelled",
+            "canceled"
+          ],
+          "tone": "danger"
+        },
+        {
+          "values": [
+            "قيد المراجعة",
+            "pending"
+          ],
+          "tone": "warning"
+        }
+      ]
+    },
+    "dates": [
+      {
+        "label": "تاريخ الإصدار",
+        "path": "issueDate",
+        "id": "license-issue-date"
+      },
+      {
+        "label": "تاريخ الانتهاء",
+        "path": "expiryDate",
+        "id": "license-expiry-date"
+      }
+    ]
+  },
+  "sections": [
+    {
+      "title": "بيانات المنشأة الصناعية",
+      "type": "fields",
+      "rows": [
+        [
+          [
+            {
+              "label": "رمز المنشأة الصناعية",
+              "path": "industrialFacility.facilityCode",
+              "id": "facility-code"
+            },
+            {
+              "label": "اسم المنشأة الصناعية",
+              "path": "industrialFacility.facilityName",
+              "id": "facility-name"
+            },
+            {
+              "label": "عنوان المنشأة الصناعية",
+              "path": "industrialFacility.facilityAddress",
+              "id": "facility-address"
+            }
+          ],
+          [
+            {
+              "label": "حالة المنشأة الصناعية",
+              "path": "industrialFacility.facilityStatus",
+              "id": "facility-status",
+              "variants": [
+                {
+                  "values": [
+                    "الإنتاج",
+                    "الانتاج"
+                  ],
+                  "tone": "success"
+                },
+                {
+                  "values": [
+                    "تحت الإنشاء",
+                    "تحت الانشاء"
+                  ],
+                  "tone": "warning"
+                }
+              ]
+            }
+          ],
+          [
+            {
+              "label": "الرقم الموحد",
+              "path": "industrialFacility.unifiedNumber",
+              "id": "unified-number"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "title": "بيانات السجل التجاري",
+      "type": "fields",
+      "rows": [
+        [
+          [
+            {
+              "label": "اسم المنشأة في السجل التجاري",
+              "path": "commercialRegistration.establishmentName",
+              "id": "cr-name"
+            },
+            {
+              "label": "عنوان السجل التجاري",
+              "path": "commercialRegistration.address",
+              "id": "cr-address"
+            }
+          ],
+          [],
+          []
+        ],
+        [
+          [
+            {
+              "label": "رقم السجل التجاري",
+              "path": "commercialRegistration.commercialRegistrationNumber",
+              "id": "cr-number"
+            },
+            {
+              "label": "تاريخ إصدار السجل التجاري",
+              "path": "commercialRegistration.issueDate",
+              "id": "cr-issue-date"
+            }
+          ],
+          [
+            {
+              "label": "نوع السجل التجاري",
+              "path": "commercialRegistration.type",
+              "id": "cr-type"
+            },
+            {
+              "label": "تاريخ إنتهاء السجل التجاري",
+              "path": "commercialRegistration.expiryDate",
+              "id": "cr-expiry-date"
+            }
+          ],
+          [
+            {
+              "label": "رأس المال",
+              "paths": [
+                "commercialRegistration.capital",
+                "commercialRegistration.currency"
+              ],
+              "separator": "  ",
+              "id": "cr-capital"
+            }
+          ]
+        ]
+      ]
+    },
+    {
+      "title": "قائمة الأنشطة الإقتصادية المرخصة",
+      "type": "table",
+      "path": "licensedEconomicActivities",
+      "bodyId": "activities-body",
+      "columns": [
+        {
+          "label": "رمز النشاط",
+          "path": "activityCode"
+        },
+        {
+          "label": "مسمى النشاط",
+          "path": "activityName"
+        }
+      ]
+    },
+    {
+      "title": "قائمة المنتجات",
+      "type": "table",
+      "path": "products",
+      "bodyId": "products-body",
+      "columns": [
+        {
+          "label": "جميع بنود الـ HS",
+          "path": "allHsCodes"
+        },
+        {
+          "label": "البند الجمركي",
+          "path": "customsTariffCode"
+        },
+        {
+          "label": "اسم المنتج",
+          "path": "productName"
+        },
+        {
+          "label": "النشاط الصناعي",
+          "path": "industrialActivity"
+        },
+        {
+          "label": "الطاقة الإنتاجيةالتصميمية القصوى سنوياً",
+          "path": "maximumAnnualDesignProductionCapacity"
+        },
+        {
+          "label": "وحدة القياس",
+          "path": "unitOfMeasure"
+        }
+      ]
+    }
+  ],
+  "footer": {
+    "image": {
+      "src": "images/senaei.jpg",
+      "alt": "Senaei"
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "Error 404",
+      "message": "Page not found.",
+      "language": "en",
+      "direction": "ltr"
+    },
+    "500": {
+      "title": "Invalid data",
+      "message": "The JSON file is not valid.",
+      "language": "en",
+      "direction": "ltr"
+    },
+    "503": {
+      "title": "Unable to load page",
+      "message": "Please try again.",
+      "language": "en",
+      "direction": "ltr"
+    }
+  }
+}
