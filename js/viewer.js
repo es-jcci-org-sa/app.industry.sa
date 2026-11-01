@@ -11,7 +11,12 @@
   let requestNumber = 0;
 
   class LoadError extends Error {
-    constructor(code) { super(String(code)); this.code = code; }
+    constructor(code, phase = 'DATA_VALIDATION', status = null) {
+      super(String(code));
+      this.code = code;
+      this.phase = phase;
+      this.status = status;
+    }
   }
 
   function readPath(value, path) {
@@ -32,18 +37,40 @@
   }
 
   async function loadJSON(relativePath) {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 15000);
-    try {
-      const response = await fetch(new URL(relativePath, base), {cache: 'no-store', signal: controller.signal});
-      if (!response.ok) throw new LoadError(response.status === 404 ? 404 : 503);
-      // Live Server may return its HTML entry point for a missing JSON file.
-      if (!/application\/(?:[\w.+-]*\+)?json\b/i.test(response.headers.get('content-type') || '')) throw new LoadError(404);
-      let data;
-      try { data = await response.json(); } catch (_) { throw new LoadError(500); }
-      if (!object(data)) throw new LoadError(500);
-      return data;
-    } finally { clearTimeout(timeout); }
+    const url = new URL(relativePath, base);
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 7000);
+      let retry = false;
+      let failure;
+      try {
+        const response = await fetch(url, {cache: 'no-store', signal: controller.signal});
+        if (!response.ok) {
+          retry = response.status === 429 || response.status >= 500;
+          throw new LoadError(response.status === 404 ? 404 : 503, 'DATA_HTTP', response.status);
+        }
+        // Live Server can return HTML for an absent JSON file.
+        if (!/application\/(?:[\w.+-]*\+)?json\b/i.test(response.headers.get('content-type') || '')) throw new LoadError(404, 'DATA_TYPE');
+        let data;
+        try { data = await response.json(); }
+        catch (error) {
+          if (controller.signal.aborted) {retry = true; throw new LoadError(503, 'DATA_TIMEOUT');}
+          if (error instanceof SyntaxError) throw new LoadError(500, 'DATA_PARSE');
+          retry = true;
+          throw new LoadError(503, 'DATA_CONNECTION');
+        }
+        if (!object(data)) throw new LoadError(500, 'DATA_VALIDATION');
+        return data;
+      } catch (error) {
+        if (error instanceof LoadError) failure = error;
+        else {
+          retry = true;
+          failure = new LoadError(503, controller.signal.aborted ? 'DATA_TIMEOUT' : 'DATA_CONNECTION');
+        }
+      } finally { clearTimeout(timeout); }
+      if (!retry || attempt === 2) throw failure;
+      await new Promise(resolve => setTimeout(resolve, attempt === 0 ? 250 : 750));
+    }
   }
 
   function routeId() {
@@ -51,12 +78,12 @@
     const match = relative.match(/^license\/view\/([^/]+?)(?:\/|\/index\.html)?$/);
     let id = '';
     if (match && match[1] !== 'index.html') {
-      try { id = decodeURIComponent(match[1]); } catch (_) { throw new LoadError(404); }
+      try { id = decodeURIComponent(match[1]); } catch (_) { throw new LoadError(404, 'ROUTE'); }
     } else if (['', 'index.html', '404.html', 'license/view/', 'license/view/index.html'].includes(relative)) {
       const params = new URLSearchParams(location.search);
       id = params.get('id') || params.get('routeId') || '';
     }
-    if (!validId(id)) throw new LoadError(404);
+    if (!validId(id)) throw new LoadError(404, 'ROUTE');
     return id;
   }
 
@@ -170,7 +197,7 @@
     app.dataset.state = 'ready';
   }
 
-  function showError(code) {
+  function showError(code, phase) {
     const custom = config && object(config.errors) && config.errors[String(code)];
     // Without a readable record there are no record-specific strings to display.
     const settings = object(custom) ? custom : {title: Error.name + ' ' + code, message: '', language: 'en', direction: 'ltr'};
@@ -185,6 +212,8 @@
     app.replaceChildren(box);
     app.dataset.state = 'error';
     app.dataset.code = String(code);
+    app.dataset.errorPhase = phase || '';
+    app.setAttribute('aria-busy', 'false');
   }
 
   async function navigate() {
@@ -192,53 +221,83 @@
     config = undefined;
     app.replaceChildren();
     app.dataset.state = 'loading';
+    app.setAttribute('aria-busy', 'true');
     delete app.dataset.code;
     delete app.dataset.route;
+    delete app.dataset.errorPhase;
+    delete app.dataset.styles;
     document.title = '';
     try {
       const id = routeId();
       const data = await loadJSON('data/' + encodeURIComponent(id) + '.json');
       if (current !== requestNumber) return;
       if (!object(data.view) || !object(data.view.header) || !object(data.view.summary) || !Array.isArray(data.view.sections)) throw new LoadError(500);
-      const nextConfig = data.view;
-      if (!await applyPresentation(nextConfig, current)) return;
-      config = nextConfig;
-      render(data);
+      config = data.view;
+      try { render(data); }
+      catch (_) { throw new LoadError(500, 'VIEW_RENDER'); }
       app.dataset.route = id;
+      app.setAttribute('aria-busy', 'false');
+      // Styling is optional presentation. It must never turn loaded data into 503.
+      applyPresentation(config, current).catch(() => {
+        if (current === requestNumber) app.dataset.styles = 'fallback';
+      });
     } catch (error) {
-      if (current === requestNumber) showError(error.code || 503);
+      if (current === requestNumber) {
+        const known = error instanceof LoadError;
+        const code = known ? error.code : 500;
+        const phase = known ? error.phase : 'VIEW_INTERNAL';
+        console.error('[viewer]', {code, phase, status: known ? error.status : null});
+        showError(code, phase);
+      }
     }
   }
 
   async function applyPresentation(settings, current) {
     const previous = [...document.querySelectorAll('link[data-viewer-stylesheet]')];
     const added = [];
-    try {
-      await Promise.all((settings.stylesheets || []).map(path => new Promise((resolve, reject) => {
+    async function stylesheet(path) {
+      for (let attempt = 0; attempt < 2; attempt++) {
+        if (current !== requestNumber) return false;
+        const success = await new Promise(resolve => {
         const link = element('link');
         link.rel = 'stylesheet';
         link.dataset.viewerStylesheet = '';
-        link.href = new URL(path, base).href;
-        const timer = setTimeout(() => reject(new LoadError(503)), 15000);
-        link.onload = () => {clearTimeout(timer); resolve();};
-        link.onerror = () => {clearTimeout(timer); reject(new LoadError(503));};
+        const url = new URL(path, base);
+        if (attempt) url.searchParams.set('style_retry', String(attempt));
+        link.href = url.href;
+        let settled = false;
+        const finish = success => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          if (!success) link.remove();
+          resolve(success);
+        };
+        const timer = setTimeout(() => finish(false), 5000);
+        link.onload = () => finish(true);
+        link.onerror = () => finish(false);
         added.push(link);
         document.head.append(link);
-      })));
-      if (current !== requestNumber) {added.forEach(link => link.remove()); return false;}
-      previous.forEach(link => link.remove());
-      document.querySelectorAll('link[data-viewer-favicon]').forEach(link => link.remove());
-      if (settings.favicon) {
-        const icon = element('link');
-        icon.rel = 'icon';
-        icon.dataset.viewerFavicon = '';
-        icon.href = new URL(settings.favicon, base).href;
-        document.head.append(icon);
+        });
+        if (success) return true;
+        if (!attempt) await new Promise(resolve => setTimeout(resolve, 250));
       }
-      return true;
-    } catch (error) {
-      added.forEach(link => link.remove());
-      throw error;
+      return false;
+    }
+    const paths = Array.isArray(settings.stylesheets) ? settings.stylesheets.filter(path => typeof path === 'string') : [];
+    const results = await Promise.allSettled(paths.map(stylesheet));
+    if (current !== requestNumber) {added.forEach(link => link.remove()); return;}
+    const complete = results.every(result => result.status === 'fulfilled' && result.value);
+    previous.forEach(link => link.remove());
+    app.dataset.styles = complete ? 'ready' : 'fallback';
+    if (!complete) console.warn('[viewer]', {phase: 'STYLE_FALLBACK'});
+    document.querySelectorAll('link[data-viewer-favicon]').forEach(link => link.remove());
+    if (settings.favicon) {
+      const icon = element('link');
+      icon.rel = 'icon';
+      icon.dataset.viewerFavicon = '';
+      icon.href = new URL(settings.favicon, base).href;
+      document.head.append(icon);
     }
   }
 
